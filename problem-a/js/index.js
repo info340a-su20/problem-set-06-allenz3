@@ -99,25 +99,26 @@ function fetchTrackList(term) {
     .then(function(data) {
       console.log(data);
       console.log("some value " + document.querySelector("#searchQuery").value);
+      console.log(promise);
       renderSearchResults(data);
-    })
-    .catch(function(error) {
-      renderError(error);
     });
+    //.catch(function(error) {
+    //  renderError(error);
+    //});
     //.then(function(error) {
       //togglerSpinner();
     //});
     return promise;
 }
-fetchTrackList("Nirvana");
-
+fetchTrackList("TestSearch");
+/*
 //Add an event listener to the "search" button so that when it is clicked (and 
 //the the form is submitted) your `fetchTrackList()` function is called with the
 //user-entered `#searchQuery` value. Use the `preventDefault()` function to keep
 //the form from being submitted as usual (and navigating to a different page).
 const searchButton = document.querySelector("#searchQuery");
 searchButton.addEventListener("click", fetchTrackList(searchButton.value));
-/*const form = document.querySelector("#form");
+const form = document.querySelector("#form");
 form.addEventListener("submit", function(event) {
   event.preventDefault();
 });
