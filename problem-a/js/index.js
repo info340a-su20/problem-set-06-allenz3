@@ -33,8 +33,16 @@ const EXAMPLE_SEARCH_RESULTS = {results:[{
 //
 //You can test this function by passing it one of the above array items
 //(e.g., `EXAMPLE_SEARCH_RESULTS.results[0]).
-
-
+function renderTrack(track) {
+  const recordsList = document.querySelector("#records");
+  const newRecord = document.createElement("img");
+  newRecord.setAttribute("src", track.artworkUrl100);
+  newRecord.setAttribute("alt", track.trackName);
+  newRecord.setAttribute("title", track.trackName);
+  //newRecord.addEventListener("click", playTrackPreview(track, newRecord));
+  recordsList.appendChild(newRecord);
+}
+renderTrack(EXAMPLE_SEARCH_RESULTS.results[0]);
 
 //Define a function `renderSearchResults()` that takes in an object with a
 //`results` property containing an array of music tracks; the same format as
@@ -44,8 +52,20 @@ const EXAMPLE_SEARCH_RESULTS = {results:[{
 //"clear" the previously displayed results first!
 //
 //You can test this function by passing it the `EXAMPLE_SEARCH_RESULTS` object.
-
-
+function renderSearchResults(searchResults) {
+  const list = document.querySelector("#records");
+  while(list.firstChild) {
+    list.removeChild(list.lastChild);
+  }
+  //https://www.w3docs.com/snippets/javascript/how-to-remove-all-the-child-elements-of-a-dom-node-in-javascript.html
+  //if (searchResults.results.length === 0) {
+    //renderError(new Error("No Results Found"));
+  //}
+  for(let i = 0; i < searchResults.results.length; i++) {
+    renderTrack(searchResults.results[i]);
+  }
+}
+renderSearchResults(EXAMPLE_SEARCH_RESULTS);
 
 //Now it's the time to practice using `fetch()`! First, modify the `index.html`
 //file to load the polyfills for _BOTH_ the fetch() function and Promises, so
@@ -68,23 +88,47 @@ const EXAMPLE_SEARCH_RESULTS = {results:[{
 //You can test this function by calling the method and passing it the name of 
 //your favorite band (you CANNOT test it with the search button yet!)
 const URL_TEMPLATE = "https://itunes.apple.com/search?entity=song&limit=25&term={searchTerm}";
+function fetchTrackList(term) {
+  //togglerSpinner();
+  console.log(URL_TEMPLATE.substring(0, 58) + term);
+  fetch(URL_TEMPLATE.substring(0, 58) + term)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      console.log(data);
+      console.log("some value " + document.querySelector("#searchQuery").value);
+      renderSearchResults(data);
+      //togglerSpinner();
+    });
+    /*.catch(function(error) {
+      console.log(renderError(error));
+    })
+    .then(function(error) {
 
-
-
+    });*/
+}
+fetchTrackList("Nirvana");
 
 //Add an event listener to the "search" button so that when it is clicked (and 
 //the the form is submitted) your `fetchTrackList()` function is called with the
 //user-entered `#searchQuery` value. Use the `preventDefault()` function to keep
 //the form from being submitted as usual (and navigating to a different page).
-
-
+const searchButton = document.querySelector("#searchQuery");
+searchButton.addEventListener("click", fetchTrackList(searchButton.value));
+/*const form = document.querySelector("#form");
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+});
 
 //Next, add some error handling to the page. Define a function `renderError()`
 //that takes in an "Error object" and displays that object's `message` property
 //on the page. Display this by creating a `<p class="alert alert-danger">` and
 //placing that alert inside the `#records` element.
-
-
+function renderError(error) {
+  const alert = document.querySelector("p");
+  alert.textContent = error.message;
+}
 
 //Add the error handing to your program in two ways:
 //(1) Add a `.catch()` callback to the AJAX call in `fetchTrackList()` that
@@ -107,10 +151,11 @@ const URL_TEMPLATE = "https://itunes.apple.com/search?entity=song&limit=25&term=
 //spinner (show it) BEFORE you send the AJAX request, and toggle it back off
 //after the ENTIRE request is completed (including after any error catching---
 //download the data and `catch()` the error, and `then()` show the spinner.
-
-
-
-
+function togglerSpinner() {
+  const spinner = document.querySelector("i.fa-spinner");
+  spinner.classList.toggle("d-none");
+}
+*/
 //Optional extra: add the ability to "play" each track listing by clicking
 //on it. Modify the `renderTrack()` function to assign a `'click'` listener to
 //each track image it creates. When that image is clicked, call the below function
