@@ -90,8 +90,9 @@ renderSearchResults(EXAMPLE_SEARCH_RESULTS);
 const URL_TEMPLATE = "https://itunes.apple.com/search?entity=song&limit=25&term={searchTerm}";
 function fetchTrackList(term) {
   //togglerSpinner();
-  console.log(URL_TEMPLATE.substring(0, 58) + term);
-  fetch(URL_TEMPLATE.substring(0, 58) + term)
+  const url = URL_TEMPLATE.substring(0, 58) + term;
+  console.log(url);
+  let promise = fetch("https://itunes.apple.com/search?entity=song&limit=25&term=TestSearch")
     .then(function(response) {
       return response.json();
     })
@@ -99,14 +100,14 @@ function fetchTrackList(term) {
       console.log(data);
       console.log("some value " + document.querySelector("#searchQuery").value);
       renderSearchResults(data);
-      //togglerSpinner();
-    });
-    /*.catch(function(error) {
-      console.log(renderError(error));
     })
-    .then(function(error) {
-
-    });*/
+    .catch(function(error) {
+      renderError(error);
+    });
+    //.then(function(error) {
+      //togglerSpinner();
+    //});
+    return promise;
 }
 fetchTrackList("Nirvana");
 
