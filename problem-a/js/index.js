@@ -92,14 +92,14 @@ function fetchTrackList(term) {
   //togglerSpinner();
   const url = URL_TEMPLATE.substring(0, 58) + term;
   console.log(url);
-  let promise = fetch("https://itunes.apple.com/search?entity=song&limit=25&term=TestSearch")
+  let promise = fetch(url)
     .then(function(response) {
       return response.json();
     })
     .then(function(data) {
-      console.log(data);
-      console.log("some value " + document.querySelector("#searchQuery").value);
-      console.log(promise);
+      //console.log(data);
+      //console.log("some value " + document.querySelector("#searchQuery").value);
+      //console.log(promise);
       renderSearchResults(data);
     });
     //.catch(function(error) {
@@ -110,19 +110,19 @@ function fetchTrackList(term) {
     //});
     return promise;
 }
-fetchTrackList("TestSearch");
-/*
+//fetchTrackList("TestSearch");
+
 //Add an event listener to the "search" button so that when it is clicked (and 
 //the the form is submitted) your `fetchTrackList()` function is called with the
 //user-entered `#searchQuery` value. Use the `preventDefault()` function to keep
 //the form from being submitted as usual (and navigating to a different page).
-const searchButton = document.querySelector("#searchQuery");
-searchButton.addEventListener("click", fetchTrackList(searchButton.value));
-const form = document.querySelector("#form");
+const form = document.querySelector("form");
 form.addEventListener("submit", function(event) {
   event.preventDefault();
 });
-
+const searchButton = document.querySelector("#searchQuery");
+searchButton.addEventListener("click", fetchTrackList(searchButton.value));
+/*
 //Next, add some error handling to the page. Define a function `renderError()`
 //that takes in an "Error object" and displays that object's `message` property
 //on the page. Display this by creating a `<p class="alert alert-danger">` and
