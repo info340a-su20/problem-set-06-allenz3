@@ -39,7 +39,6 @@ function renderTrack(track) {
   newRecord.setAttribute("src", track.artworkUrl100);
   newRecord.setAttribute("alt", track.trackName);
   newRecord.setAttribute("title", track.trackName);
-  //newRecord.addEventListener("click", playTrackPreview(track, newRecord));
   recordsList.appendChild(newRecord);
 }
 renderTrack(EXAMPLE_SEARCH_RESULTS.results[0]);
@@ -58,9 +57,9 @@ function renderSearchResults(searchResults) {
     list.removeChild(list.lastChild);
   }
   //https://www.w3docs.com/snippets/javascript/how-to-remove-all-the-child-elements-of-a-dom-node-in-javascript.html
-  //if (searchResults.results.length === 0) {
-    //renderError(new Error("No Results Found"));
-  //}
+  if (searchResults.results.length === 0) {
+    renderError(new Error("No results found"));
+  }
   for(let i = 0; i < searchResults.results.length; i++) {
     renderTrack(searchResults.results[i]);
   }
@@ -89,47 +88,47 @@ renderSearchResults(EXAMPLE_SEARCH_RESULTS);
 //your favorite band (you CANNOT test it with the search button yet!)
 const URL_TEMPLATE = "https://itunes.apple.com/search?entity=song&limit=25&term={searchTerm}";
 function fetchTrackList(term) {
-  //togglerSpinner();
+  togglerSpinner();
   const url = URL_TEMPLATE.substring(0, 58) + term;
-  console.log(url);
   let promise = fetch(url)
     .then(function(response) {
       return response.json();
     })
     .then(function(data) {
-      //console.log(data);
-      //console.log("some value " + document.querySelector("#searchQuery").value);
-      //console.log(promise);
       renderSearchResults(data);
+    })
+    .catch(function(error) {
+      renderError(error);
+    })
+    .then(function() {
+      togglerSpinner();
     });
-    //.catch(function(error) {
-    //  renderError(error);
-    //});
-    //.then(function(error) {
-      //togglerSpinner();
-    //});
     return promise;
 }
-//fetchTrackList("TestSearch");
 
 //Add an event listener to the "search" button so that when it is clicked (and 
 //the the form is submitted) your `fetchTrackList()` function is called with the
 //user-entered `#searchQuery` value. Use the `preventDefault()` function to keep
 //the form from being submitted as usual (and navigating to a different page).
+
+//searchButton.addEventListener("click", fetchTrackList(searchButton.value));
 const form = document.querySelector("form");
 form.addEventListener("submit", function(event) {
   event.preventDefault();
+  const searchButton = document.querySelector("#searchQuery");
+  fetchTrackList(searchButton.value);
 });
-const searchButton = document.querySelector("#searchQuery");
-searchButton.addEventListener("click", fetchTrackList(searchButton.value));
-/*
+
 //Next, add some error handling to the page. Define a function `renderError()`
 //that takes in an "Error object" and displays that object's `message` property
 //on the page. Display this by creating a `<p class="alert alert-danger">` and
 //placing that alert inside the `#records` element.
 function renderError(error) {
-  const alert = document.querySelector("p");
+  const alert = document.createElement("p");
+  alert.classList.add("alert");
+  alert.classList.add("alert-danger");
   alert.textContent = error.message;
+  document.querySelector("#records").appendChild(alert);
 }
 
 //Add the error handing to your program in two ways:
@@ -157,7 +156,7 @@ function togglerSpinner() {
   const spinner = document.querySelector("i.fa-spinner");
   spinner.classList.toggle("d-none");
 }
-*/
+
 //Optional extra: add the ability to "play" each track listing by clicking
 //on it. Modify the `renderTrack()` function to assign a `'click'` listener to
 //each track image it creates. When that image is clicked, call the below function
